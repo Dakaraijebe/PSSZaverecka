@@ -1,6 +1,7 @@
 const int relePin = 2;
 const int touchPin = 4;
-int interval = 5000;  // Interval, teď může měnit hodnotu
+unsigned long interval = 1800000;  // Interval, teď může měnit hodnotu
+const unsigned long maxInterval = 21600000;
 
 void setup() {
   pinMode(relePin, OUTPUT);    // Rele jako výstup
@@ -10,6 +11,7 @@ void setup() {
 }
 
 void loop() {
+  if (interval > 600000) interval = 600000;
   int buttonState = digitalRead(touchPin); // Čteme stav tlačítka
 
   if (buttonState == HIGH) {
@@ -20,6 +22,9 @@ void loop() {
     delay(interval); // Pauza podle intervalu
 
     interval = interval * 1.2; // Zvětši interval o 1.2x
+      if (interval > maxInterval) {
+      interval = maxInterval;
+    }
   } else {
     // Pokud tlačítko není stisknuté:
     digitalWrite(13, HIGH);   // LED zhasni
