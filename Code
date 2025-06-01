@@ -1,33 +1,46 @@
-const int relePin = 2;
-const int touchPin = 4;
-unsigned long interval = 1800000;  // Interval, teď může měnit hodnotu
-const unsigned long maxInterval = 21600000;
+const int relePin = 2;          // Pin, na kterém je připojeno relé (výstup)
+const int touchPin = 4;         // Pin, na kterém je připojeno dotykové tlačítko (vstup)
+
+
+unsigned long interval = 5000;          // Počáteční čekací doba – 5 sekund
+const unsigned long maxInterval = 21600000; // Maximální hodnota intervalu – 6 hodin
 
 void setup() {
-  pinMode(relePin, OUTPUT);    // Rele jako výstup
-  digitalWrite(relePin, LOW);  // Relé na začátku vypnuto
-  pinMode(touchPin, INPUT);    // Tlačítko / dotyk na pinu 3 jako vstup
-  pinMode(13, OUTPUT);          // LED na pinu 13 jako výstup
+  pinMode(relePin, OUTPUT);     // Nastaví pin pro relé jako výstup
+  digitalWrite(relePin, HIGH);  // Vypne relé (většina relé je aktivní při LOW)
+  
+  pinMode(touchPin, INPUT);     // Nastaví pin pro dotykové tlačítko jako vstup
+  pinMode(13, OUTPUT);          // Vestavěná LED na pinu 13 jako výstup
 }
 
 void loop() {
-  if (interval > 600000) interval = 600000;
-  int buttonState = digitalRead(touchPin); // Čteme stav tlačítka
+  waitInterval();               
 
-  if (buttonState == HIGH) {
-    digitalWrite(13, LOW);  // Rozsviť LED
-    digitalWrite(relePin, LOW);  // Sepni relé (aktivuj elektromagnet)
-    delay(500); // Drž relé sepnuté 500 ms
-    digitalWrite(relePin, HIGH); // Vypni relé (deaktivuj elektromagnet)
-    delay(interval); // Pauza podle intervalu
-
-    interval = interval * 1.2; // Zvětši interval o 1.2x
-      if (interval > maxInterval) {
-      interval = maxInterval;
-    }
-  } else {
-    // Pokud tlačítko není stisknuté:
-    digitalWrite(13, HIGH);   // LED zhasni
-    digitalWrite(relePin, HIGH); // Relé vypnuto 
+  // Čekání, dokud uživatel nestiskne dotykové tlačítko
+  int buttonState = digitalRead(touchPin);   // Načti stav tlačítka
+  while (buttonState != HIGH) {              // Pokud není stisknuto (nebo není dotyk),
+    buttonState = digitalRead(touchPin);     // kontroluj dál v cyklu
   }
+
+  pushCigarette();             // Aktivuj mechanizmus (např. vysunutí cigarety)
+  digitalWrite(13, LOW);       // Zhasni LEDku (indikace, že akce proběhla)
+} 
+
+// Funkce pro sepnutí relé
+void pushCigarette() {
+  digitalWrite(relePin, LOW);   // Sepni relé (např. zapni elektromagnet)
+  delay(500);                   // Drž relé zapnuté 500 ms
+  digitalWrite(relePin, HIGH);  // Vypni relé (relé se rozepne)
+}
+
+// Funkce pro čekání – a zvyšování intervalu
+void waitInterval() {
+  delay(interval);              // Čekej po dobu aktuálního intervalu
+
+  // Pokud ještě nebyl dosažen maximální interval, zvětši ho 2×
+  if (interval < maxInterval) {
+    interval = interval * 2;
+  }
+
+  digitalWrite(13, HIGH);       // Rozsviť LEDku – signalizuje, že čekání skončilo
 }
