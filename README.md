@@ -10,7 +10,7 @@ Tento projekt představuje krabičku na cigarety, která má za cíl pomoci uži
 
 ## V čem je řešení unikátní
 
-- Intervaly výdeje se prodlužují o 20 po každém pokusu.
+- Intervaly výdeje se prodlužují po každém pokusu.
 - Používá kapacitní tlačítko místo mechanického – moderní a bezúdržbové.
 - LED signalizace ukazuje, kdy je možné si vzít cigaretu.
 - Elektromagnetický mechanismus cigaretu mechanicky vysune.
@@ -34,7 +34,7 @@ Tento projekt představuje krabičku na cigarety, která má za cíl pomoci uži
 3. Uživatel stiskne dotykový spínač.
 4. Arduino sepne relé a aktivuje elektromagnet (na 0,5 s).
 5. Cigareta se mechanicky vysune.
-6. Interval se prodlouží (např. ×1.2).
+6. Interval se prodlouží ×2.
 7. Proces se opakuje – dokud zařízení běží.
 
 ## Základní algoritmus
