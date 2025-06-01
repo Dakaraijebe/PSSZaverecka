@@ -1,0 +1,28 @@
+const int relePin = 2;
+const int touchPin = 4;
+int interval = 5000;  // Interval, teď může měnit hodnotu
+
+void setup() {
+  pinMode(relePin, OUTPUT);    // Rele jako výstup
+  digitalWrite(relePin, LOW);  // Relé na začátku vypnuto
+  pinMode(touchPin, INPUT);    // Tlačítko / dotyk na pinu 3 jako vstup
+  pinMode(13, OUTPUT);          // LED na pinu 13 jako výstup
+}
+
+void loop() {
+  int buttonState = digitalRead(touchPin); // Čteme stav tlačítka
+
+  if (buttonState == HIGH) {
+    digitalWrite(13, LOW);  // Rozsviť LED
+    digitalWrite(relePin, LOW);  // Sepni relé (aktivuj elektromagnet)
+    delay(500); // Drž relé sepnuté 500 ms
+    digitalWrite(relePin, HIGH); // Vypni relé (deaktivuj elektromagnet)
+    delay(interval); // Pauza podle intervalu
+
+    interval = interval * 1.2; // Zvětši interval o 1.2x
+  } else {
+    // Pokud tlačítko není stisknuté:
+    digitalWrite(13, HIGH);   // LED zhasni
+    digitalWrite(relePin, HIGH); // Relé vypnuto 
+  }
+}
